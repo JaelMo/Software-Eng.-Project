@@ -42,11 +42,19 @@ dealPlayer()
 print("----------")
 dealCommunity()
 print("----------")
-dealAI()
-playerscore = 0
+#dealAI()
+
 def compare():
+    playerscore = 0
     for count in range(0,5):
-        if player_hand[1].rank == community_cards[count].rank & player_hand[1].suit is community_cards[count].suit:
-            playerscore = playerscore + 1
+        if player_hand[0].rank == community_cards[count].rank:
+            if player_hand[0].suit == community_cards[count].suit:
+                playerscore = playerscore + 1
+        if player_hand[1].rank == community_cards[count].rank:
+            if player_hand[1].suit == community_cards[count].suit:
+                playerscore = playerscore + 1
+        if community_cards[count].rank == community_cards[].rank:
+            playerscore=playerscore+1
     print(playerscore)
 compare()
+
