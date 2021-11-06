@@ -57,8 +57,10 @@ def checkForDupe():
     for count1 in range(0, len(player_hand)):
         for count2 in range(0,len(aIhand)):
             for  count3 in range(0,len(community_cards)):
-                while player_hand[count1] == aIhand[count2] == community_cards[count3]:
-                    aIhand[count2] = card_define()
+                if player_hand[count1] == aIhand[count2] or player_hand[count1] == community_cards[count3] or aIhand[count2]==community_cards[count3]:
+                    print("there was a dupe")
+                    if player_hand[count1]==aIhand[count2]:
+                        aIhand[count2] = card_define()
                     community_cards[count3] = card_define()
                     if aIhand[0]==aIhand[1]:
                         aIhand[1] = card_define()
@@ -90,6 +92,17 @@ def uservsAicompare():
             if player_hand[count].rank == aIhand[secondcount].rank:
                 highcard(count)
 
+def compare2():
+    count = 0
+    while count < len(community_cards):
+        a = sum(c.rank == community_cards[count].rank  for c in community_cards)
+        count+=1
+    if a == 1:
+        print("no pairs")
+        uservsAicompare()
+    else:   
+        print(a-1," pair for user")
+
 def highcard(position):
     userhigh = 0
     aihigh = 0
@@ -101,17 +114,6 @@ def highcard(position):
             print("User wins by high card")
         if userhigh < aihigh:
             print("User loses by high card")
-
-def compare2():
-    count = 0
-    while count < len(community_cards):
-        a = sum(c.rank == community_cards[count].rank  for c in community_cards)
-        count+=1
-    if a == 1:
-        print("no pairs")
-        uservsAicompare()
-    else:   
-        print(a-1," pair for user")
 
 dealPlayer()
 #compare()
