@@ -34,20 +34,19 @@ while True:
         #import texasHoldem
         print("Not ready yet")
     elif choice =="2":
-        #import blackjack
-        print("Not ready yet")
+        import blackjack
     elif choice == "3":
         if globals.profile.user_name == "guest":
             print("Wallet is not avaliable to guests")
-            input("Press any key to continue...")
+            input("Press Enter key to continue...")
         else:
             checkWallet()
-            input("Press any key to continue...")
+            input("Press Enter key to continue...")
     elif choice == "4":
         userAccounts.save()
         globals.profile = ""
         break
     else:
         print("Invalid choice\n\n")
-        input("Press any key to continue...")
+        input("Press Enter key to continue...")
     globals.cls()

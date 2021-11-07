@@ -29,6 +29,6 @@ while True:
         break
     else:
         print("Invalid choice\n\n")
-        input("Press any key to continue...")
+        input("Press Enter key to continue...")
     globals.cls()
     
