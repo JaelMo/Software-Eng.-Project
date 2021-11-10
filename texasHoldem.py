@@ -4,6 +4,11 @@ class card:
     def _init_ (self, rank, suit):
         self.rank = rank
         self.suit = suit
+    def __eq__(self, other):
+        if(isinstance(other, card)):
+            return self.rank == other.rank and self.suit == other.suit
+        return False
+
 
 ranks = [2,3,4,5,6,7,8,9,10,'J','Q','K','A']
 suits = ["Clubs","Diamonds","Hearts","Spades"]
@@ -11,7 +16,8 @@ suits = ["Clubs","Diamonds","Hearts","Spades"]
 player_hand = []
 community_cards = []
 aIhand = []
-
+cardsforPlayer = []            
+cardsForPlayer = player_hand + community_cards
 def card_define():
     carD = card()
     carD.rank = ranks[randint(0,12)]
@@ -58,7 +64,7 @@ def checkForDupe():
         for count2 in range(0,len(aIhand)):
             for  count3 in range(0,len(community_cards)):
                 if player_hand[count1] == aIhand[count2] or player_hand[count1] == community_cards[count3] or aIhand[count2]==community_cards[count3]:
-                    print("there was a dupe")
+                    #print("found dupe")
                     if player_hand[count1]==aIhand[count2]:
                         aIhand[count2] = card_define()
                     community_cards[count3] = card_define()
@@ -69,7 +75,21 @@ def checkForDupe():
                                 community_cards[count4] = card_define()
 
 def compare():
-    playerscore = 1
+    if True:
+        print(True)
+
+
+def scoring():
+    for counter in range(0,len(cardsforPlayer)):
+        uservsAicompare()
+
+dealPlayer()
+
+#scoring()
+compare()
+
+
+"""playerscore = 1
     for count in range(0,5):
         if player_hand[0].rank == community_cards[count].rank:
             if player_hand[0].suit != community_cards[count].suit:
@@ -92,7 +112,7 @@ def uservsAicompare():
             if player_hand[count].rank == aIhand[secondcount].rank:
                 highcard(count)
 
-def compare2():
+def pair():
     count = 0
     while count < len(community_cards):
         a = sum(c.rank == community_cards[count].rank  for c in community_cards)
@@ -106,16 +126,22 @@ def compare2():
 def highcard(position):
     userhigh = 0
     aihigh = 0
+
+
+
     for count in range (0,len(ranks)):
         if ranks[count] == player_hand[position].rank:
             userhigh = ranks.index(ranks[count])
             aihigh = ranks.index(ranks[count])
+            if userhigh < ranks.index(ranks[count]):
+                print(userhigh)
+                userhigh = ranks.index(ranks[count])
+                print(userhigh)
+            if aihigh < ranks.index(ranks[count]):
+                print(aihigh)
+                aihigh = ranks.index(ranks[count])
+                print(aihigh)
         if userhigh > aihigh:
             print("User wins by high card")
         if userhigh < aihigh:
-            print("User loses by high card")
-
-dealPlayer()
-#compare()
-compare2()
-uservsAicompare()
+            print("User loses by high card")"""
