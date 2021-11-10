@@ -3,6 +3,7 @@ This file is the landing page for the project
 """
 
 import globals
+import mainMenu
 import userAccounts
 
 while True:
@@ -16,14 +17,14 @@ while True:
     if choice == "1":
         userAccounts.login()
         if globals.profile != "back":
-            import mainMenu
+            mainMenu.mainMenu()
     elif choice == "2":
         userAccounts.createAccount()
         if globals.profile != "back":
-            import mainMenu
+            mainMenu.mainMenu()
     elif choice == "3":
         globals.profile = globals.Profile("guest", "password", "Guest", "0", "0", 50)
-        import mainMenu
+        mainMenu.mainMenu()
     elif choice == "4":
         print("Thanks for playing!")
         break
