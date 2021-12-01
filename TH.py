@@ -18,15 +18,17 @@ rivercard = None
 communitycards = []
 
 def dealPlayer():
+    print("Player's Hand")
     player_hand.append(thdeck.drawCard(thdeck))
     player_hand.append(thdeck.drawCard(thdeck))
-    #print(player_hand)
+    print(player_hand)
     return player_hand
 
 def dealAI():
+    print("Ai's Hand")
     ai_hand.append(thdeck.drawCard(thdeck))
     ai_hand.append(thdeck.drawCard(thdeck))
-    #print(ai_hand)
+    print(ai_hand)
     return ai_hand
 
 def flop():
@@ -46,11 +48,11 @@ def river():
 
     
 def community_cards():
-    #print("The community cards at play are:")
+    print("The community cards at play are:")
     communitycards = list(flopcards)
     communitycards.append(turncard)
     communitycards.append(rivercard)
-    #print(communitycards)
+    print(communitycards)
     return communitycards
 
 def getPosition(cards):
@@ -141,11 +143,38 @@ def totk(cards):
     #start here
     
     if temp2 == 2 and temp == 3:
-        return fullhouse()        
+        return  temp+temp2
     elif temp == 3 and temp2 < 2:
-        return True
+        return temp
+    elif temp ==2 and temp2==2:
+        return temp+temp2
+    elif temp == 2 and temp2 < 2:
+        return temp
+
+def highcard():
+    lst1 = []
+    lst2= []
+    lst1 = getPosition(player_hand)
+    lst2 = getPosition(ai_hand)
+    lst1.sort()
+    lst2.sort()
+
+    playerhigh = floor(lst1[1])
+    aihigh = floor(lst2[1])
+
+    if playerhigh > aihigh:
+        print("PLAYER WINS BY HIGH CARD")
+    elif playerhigh < aihigh:
+        print("AI WINS BY HIGH CARD")
     else:
-        return False
+        print("Tie")
+    
+
+    playercards = lst1[0]
+    aicards = lst2[0]
+
+    for n in range(len(playercards))
+        
 
 def points(hand,comCards):
     playable_cards = []
@@ -155,18 +184,24 @@ def points(hand,comCards):
         playable_cards.append(comCards[count])
 
     #print(len(thdeck.resetDeck(thdeck)))
-    for card in range(len(playable_cards)):
-        print(playable_cards[card][0])
+    #for card in range(len(playable_cards)):
+        #print(playable_cards[card][0])
     if royalF(playable_cards):
         print("Royal Flush")
     elif straightF(playable_cards) and royalF(playable_cards) == False:
         print("Straight Flush")
     elif fofk(playable_cards):
         print("Four of A Kind")
-    elif fullhouse():
+    elif totk(playable_cards) == 5:
         print("Full House")
-    elif totk(playable_cards) and fofk(playable_cards)==False and fullhouse()==False:
+    elif totk(playable_cards) == 3 and fofk(playable_cards)==False:
         print("three of a kind")
+    elif totk(playable_cards)== 4:
+        print('2 pairs')
+    elif totk(playable_cards) == 2:
+        print("Pair")
+    else:
+        highcard()
 
 player_hand = []
 ai_hand = []
@@ -185,9 +220,9 @@ flopcards = flop()
 turncard = turn()
 rivercard = river()
 communitycards = community_cards()
-#print("\n\nplayer points:")
+print("\n\nplayer points:")
 playerpoints = points(player_hand,communitycards)
 #print("------------------------------------------------------")
-#print("Ai points:")
-#aipoints = points(ai_hand,communitycards)
+print("Ai points:")
+aipoints = points(ai_hand,communitycards)
 
