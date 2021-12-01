@@ -44,5 +44,29 @@ def save():
         userDB.execute(sql, data)
         userDB.commit()
 
+
+def createAccount(user_name, password, name, bank_account, drivers_license_number):
+    try:
+        sql = 'INSERT INTO user_account (user_name, password, name, bank_account_number, drivers_license_number, wallet) values(?, ?, ?, ?, ?, ?)'
+        data = [
+            user_name,
+            password,
+            name,
+            bank_account,
+            drivers_license_number,
+            50
+        ]
+        with userDB:
+            userDB.execute(sql, data)
+            cursor = userDB.cursor()
+            cursor.execute("SELECT * FROM user_account WHERE user_name = ? AND password = ?", (user_name, password))
+            data = cursor.fetchall()
+            userDB.commit()
+            globals.profile = globals.Profile(str(data[0][0]), data[0][1], data[0][2], data[0][3], data[0][4], data[0][5])
+            return True
+    except:
+        print("Failed to create account")
+        return False
+
 def closeDB():
     userDB.close()

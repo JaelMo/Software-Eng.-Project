@@ -2,7 +2,6 @@
 This file is the landing page for the project
 """
 
-from random import betavariate
 import globals
 import userAccounts
 import tkinter as tk
@@ -103,27 +102,9 @@ def loadCreateAccount():
             name = nameField.get("1.0", END)
             bank_account = bankNumberField.get("1.0", END)
             drivers_license_number = driverField.get("1.0", END)
-            try:
-                sql = 'INSERT INTO user_account (user_name, password, name, bank_account_number, drivers_license_number, wallet) values(?, ?, ?, ?, ?, ?)'
-                data = [
-                    user_name,
-                    password,
-                    name,
-                    bank_account,
-                    drivers_license_number,
-                    50
-                ]
-                with userDB:
-                    userDB.execute(sql, data)
-                    cursor = userDB.cursor()
-                    cursor.execute("SELECT * FROM user_account WHERE user_name = ? AND password = ?", (user_name, password))
-                    data = cursor.fetchall()
-                    userDB.commit()
-                    globals.profile = globals.Profile(str(data[0][0]), data[0][1], data[0][2], data[0][3], data[0][4], data[0][5])
-                    mainMenu.loadMainMenu()
-                
-            except:
-                print("Failed to create account")
+            if userAccounts.createAccount(user_name, password, name, bank_account, drivers_license_number):
+                loadGameMenu()
+
 
  
     image = tk.PhotoImage(master=globals.window, file='images/GreenBackground.png')
@@ -318,11 +299,11 @@ def loadWallet(nav):
 
     addButton = tk.Button(frame, text="Add", command=addCoins, height=1, width=20)
     addButton.config(font=("Areial bold", 18))
-    addButton.pack(pady=50)
+    addButton.pack(side="left", pady=50, expand=True)
 
     withdrawButton = tk.Button(frame, text="Withdraw", command=subCoins, height=1, width=20)
     withdrawButton.config(font=("Areial bold", 18))
-    withdrawButton.pack(pady=50)
+    withdrawButton.pack(side="right", pady=50, expand=True)
 
     frame.pack(fill="both", expand=True)
     globals.window.mainloop()
