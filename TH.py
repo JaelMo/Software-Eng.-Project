@@ -21,14 +21,17 @@ def dealPlayer():
     print("Player's Hand")
     player_hand.append(thdeck.drawCard(thdeck))
     player_hand.append(thdeck.drawCard(thdeck))
-    print(player_hand)
+    for n in range(len(player_hand)):
+        print(player_hand[n][0])
+    
     return player_hand
 
 def dealAI():
     print("Ai's Hand")
     ai_hand.append(thdeck.drawCard(thdeck))
     ai_hand.append(thdeck.drawCard(thdeck))
-    print(ai_hand)
+    for n in range(len(ai_hand)):
+        print(ai_hand[n][0])
     return ai_hand
 
 def flop():
@@ -52,7 +55,8 @@ def community_cards():
     communitycards = list(flopcards)
     communitycards.append(turncard)
     communitycards.append(rivercard)
-    print(communitycards)
+    for n in range(len(communitycards)):
+        print(communitycards[n][0])
     return communitycards
 
 def getPosition(cards):
@@ -98,7 +102,6 @@ def straightF(cards):
     pos = []
     pos= getPosition(cards)
     pos.sort()
-    print(pos)
     for m in range(len(pos)-1):
         if floor(pos[m]/13)==floor(pos[m+1]/13):
             suitcount+=1
@@ -124,8 +127,7 @@ def fofk(cards):
     else:
         return False
 
-def fullhouse():
-    return True
+
 
 def totk(cards):
     temp = 0
@@ -151,17 +153,22 @@ def totk(cards):
     elif temp == 2 and temp2 < 2:
         return temp
 
+
 def highcard():
     lst1 = []
-    lst2= []
+    lst2 = []
     lst1 = getPosition(player_hand)
     lst2 = getPosition(ai_hand)
+    for i in range(len(lst1)):
+        lst1[i]=floor(lst1[1]/4)
+    for i in range(len(lst2)):
+        lst2[i]=floor(lst2[1]/4)
     lst1.sort()
     lst2.sort()
-
-    playerhigh = floor(lst1[1]/4)
-    aihigh = floor(lst2[1]/4)
-
+    playerhigh = lst1[1]
+    aihigh = lst2[1]
+    if playerhigh == aihigh:
+        print('smile')
     if playerhigh > aihigh:
         print("PLAYER WINS BY HIGH CARD")
     elif playerhigh < aihigh:
@@ -203,9 +210,6 @@ turncard = None
 rivercard = None
 communitycards = []
     
-
-
-
 
 player_hand = dealPlayer()
 ai_hand = dealAI()
