@@ -45,10 +45,13 @@ def loadMainMenu():
     background_label = tk.Label(frame, image=image)
     background_label.place(x=0, y=0, relwidth=1, relheight=1)
 
-    createAccountButton = tk.Button(frame, text="Create Account", command=loadCreateAccount)
-    createAccountButton.config(width=10, height=5)
+    image2 = tk.PhotoImage(master=frame, file='images/createAccount.png')
+    image2 = image2.subsample(7, 7)
+    createAccountButton = tk.Button(frame, image=image2, command=loadCreateAccount)
+    createAccountButton.config(width=75, height=75)
     createAccountButton.pack(side="top", anchor="ne")
     
+
     titleLabel = tk.Label(frame, image=image, text = "Go For Broke", compound=tk.CENTER, width=800, height=100)
     titleLabel.config(font=("Bernard MT Condensed", 50))
     titleLabel.pack(side="top", pady=100)
@@ -131,8 +134,10 @@ def loadCreateAccount():
     background_label = tk.Label(frame, image=image)
     background_label.place(x=0, y=0, relwidth=1, relheight=1)
 
-    backButton = tk.Button(frame, text="Back", command=back)
-    backButton.config(width=10, height=5)
+    image2 = tk.PhotoImage(master=frame, file='images/back.png')
+    image2 = image2.subsample(7, 7)
+    backButton = tk.Button(frame, image=image2, command=back)
+    backButton.config(width=75, height=75)
     backButton.pack(side="top", anchor="nw")
 
     userNameLabel = tk.Label(frame, text="User Name", image=image, compound=tk.CENTER, height=20, width=200)
@@ -216,8 +221,10 @@ def loadLoginWindow():
     background_label = tk.Label(frame, image=image)
     background_label.place(x=0, y=0, relwidth=1, relheight=1)
 
-    backButton = tk.Button(frame, text="Back", command=back)
-    backButton.config(width=10, height=5)
+    image2 = tk.PhotoImage(master=frame, file='images/back.png')
+    image2 = image2.subsample(7, 7)
+    backButton = tk.Button(frame, image=image2, command=back)
+    backButton.config(width=75, height=75)
     backButton.pack(side="top", anchor="nw")
 
     userNameLabel = tk.Label(frame, text="User Name", image=image, compound=tk.CENTER, height=20, width=300)
@@ -328,9 +335,11 @@ def loadGameMenu():
     background_label = tk.Label(frame, image=image)
     background_label.place(x=0, y=0, relwidth=1, relheight=1)
 
-    backButton = tk.Button(frame, text="Back", command=back)
-    backButton.config(width=10, height=5)
-    backButton.pack(side="top", anchor="nw")
+    image2 = tk.PhotoImage(master=frame, file='images/back.png')
+    image2 = image2.subsample(7, 7)
+    backButton = tk.Button(frame, image=image2, command=back)
+    backButton.config(width=75, height=75)
+    backButton.pack(side="left", anchor="nw")
 
     guest = (globals.profile == "guest")
     welcome = ""
@@ -338,6 +347,13 @@ def loadGameMenu():
         welcome = "Welcome Guest!"
     else:
         welcome = "Welcome " + str(globals.profile.name)
+
+    if not guest:
+        image3 = tk.PhotoImage(master=frame, file='images/bank.png')
+        image3 = image3.subsample(7, 7)
+        walletButton = tk.Button(frame, image=image3, command=loadWallet)
+        walletButton.config(width=75, height=75)
+        walletButton.pack(side="right", anchor="ne")
 
     gameMenuLabel = tk.Label(frame, text=welcome, image=image, compound=tk.CENTER, height=100, width=700)
     gameMenuLabel.config(font=("Areial bold", 30))
@@ -355,11 +371,6 @@ def loadGameMenu():
     slotsButton.config(width=20, height=2, font=("Areial bold", 20))
     slotsButton.pack(pady=20)
 
-    if not guest:
-        walletButton = tk.Button(frame, text="Wallet", command=loadWallet)
-        walletButton.config(width=20, height=2, font=("Areial bold", 20))
-        walletButton.pack(pady=20)
-
     frame.pack(fill="both", expand=True)
     globals.window.mainloop()
 
@@ -375,31 +386,162 @@ def loadBlackJack():
         responsible for loading the game board and running the game
     """
 
-    def playBlackJack(bet):
-        deck = globals.deck()
+    def playBlackJack(bet, wallet):
+        numPlayer = 0
+        numComp = 0
+        def back(bet, wallet):
+            if globals.profile != "guest":
+                globals.profile.wallet -= bet
+                userAccounts.save()
+            wallet -= bet
+            loadBlackJack()
+
+        def hit(numCards, playerhand):
+            playerhand.append(deck.drawCard())
+            print(numPlayer)
+            playerNextImage = playerhand[numPlayer][1]
+            playerNextImage = playerNextImage.subsample(5, 5)
+            playerNext = tk.Label(botFrame, image=playerSecondImage, width=100, height=150)
+            playerNext.pack(side="left", padx=10, anchor="e")
+            numPlayer += 1
+
+
+        def stand():
+            print("stand")
+
+        def continueFunc():
+            loadBlackJack()
+
+        def calculateScore(hand):
+            count = 0
+            numAces = 0
+            for x in hand:
+                curCard = x[0][0]
+                if curCard == 'J':
+                    count += 10
+                elif curCard == 'Q':
+                    count += 10
+                elif curCard == 'K':
+                    count += 10
+                elif curCard == 'A':
+                    count += 11
+                    numAces += 1
+                elif curCard == '1':
+                    count += 10
+                else:
+                    count += int(x[0][0])
+            if count > 21 and numAces > 0:
+                count -= 10
+                numAces -= 1
+            return count
+
+        globals.clearWindow()
+
+        image = tk.PhotoImage(master=globals.window, file='images/GreenBackground.png')
+        background_label = tk.Label(globals.window, image=image)
+        background_label.place(x=0, y=0, relwidth=1, relheight=1)
+
+        frame = tk.Frame(globals.window)
+        image = tk.PhotoImage(master=frame, file='images/GreenBackground.png')
+        background_label = tk.Label(frame, image=image)
+        background_label.place(x=0, y=0, relwidth=1, relheight=1)
+
+        deck = globals.Deck()
         playerhand  = [deck.drawCard()]
         comphand = [deck.drawCard()]
         playerScore = 0
         compScore = 0
         playerhand.append(deck.drawCard())
         comphand.append(deck.drawCard())
-        globals.cls()
-        displayTable(playerhand, comphand, False)
         playerScore = calculateScore(playerhand)
         compScore = calculateScore(comphand)
+        playerTurn = True
+        numPlayer = 2
+        numComp = 2
+
+        topFrame = tk.Frame(frame)
+        image1 = tk.PhotoImage(master=topFrame, file='images/GreenBackground.png')
+        background_label = tk.Label(topFrame, image=image1)
+        background_label.place(x=0, y=0, relwidth=1, relheight=1)
+
+        image2 = tk.PhotoImage(master=frame, file='images/back.png')
+        image2 = image2.subsample(7, 7)
+        backButton = tk.Button(frame, image=image2, command=partial(back, bet, wallet))
+        backButton.config(width=75, height=75)
+        backButton.pack(side="top", anchor="nw")
+
+        dealerTitle = tk.Label(topFrame, text="Dealer's Hand", image=image, compound=tk.CENTER, width=250, height=50)
+        dealerTitle.config(font=("Areial bold", 25))
+        dealerTitle.pack(side="top", pady=40)
+
+        dealerFirstImage = comphand[0][1]
+        dealerFirstImage = dealerFirstImage.subsample(5, 5)
+        dealerFirst = tk.Label(topFrame, image=dealerFirstImage, width=100, height=150)
+        dealerFirst.pack(side="left", padx=10, anchor="e")
+
+        dealerSecondImage = tk.PhotoImage(master=frame, file='images/card_back_red.png')
+        dealerSecondImage = dealerSecondImage.subsample(5, 5)
+        dealerSecond = tk.Label(topFrame, image=dealerSecondImage, width=100, height=150)
+        dealerSecond.pack(side="left", padx=10, anchor="e")
+
+        topFrame.pack(side="top", fill="both", expand=True)
+
+        botFrame = tk.Frame(frame)
+        image3 = tk.PhotoImage(master=botFrame, file='images/GreenBackground.png')
+        background_label = tk.Label(botFrame, image=image3)
+        background_label.place(x=0, y=0, relwidth=1, relheight=1)
+
+        playerTitle = tk.Label(botFrame, text="Player's Hand", image=image, compound=tk.CENTER, width=250, height=50)
+        playerTitle.config(font=("Areial bold", 25))
+        playerTitle.pack(side="top", pady=40)
+
+        playerFirstImage = playerhand[0][1]
+        playerFirstImage = playerFirstImage.subsample(5, 5)
+        playerFirst = tk.Label(botFrame, image=playerFirstImage, width=100, height=150)
+        playerFirst.pack(side="left", padx=10, anchor="e")
+
+        playerSecondImage = playerhand[1][1]
+        playerSecondImage = playerSecondImage.subsample(5, 5)
+        playerSecond = tk.Label(botFrame, image=playerSecondImage, width=100, height=150)
+        playerSecond.pack(side="left", padx=10, anchor="e")
+
+        botFrame.pack(side="top", fill="both", expand=True)
+
         if playerScore == 21 and compScore != 21:
-            winnings = choice * 1.5
-            globals.profile.wallet += winnings
+            wallet += bet * 1.5
+            if globals.profile != "guest":
+                globals.profile.wallet
+                userAccounts.save()
+            continueButton = tk.Button(frame, text="You Got Black Jack!\n(Click Here to Continue)", command=continueFunc)
+            continueButton.config(width=200, height=15, font=("Areial bold", 25))
+            continueButton.pack(side="top")
         elif playerScore != 21 and compScore == 21:
-            globals.profile.wallet -= choice
+            wallet -= bet
+            if globals.profile != "guest":
+                globals.profile.wallet -= bet
+                userAccounts.save()
+
+        if playerTurn:
+            hitButton = tk.Button(frame, text="Hit", command=partial(hit, numPlayer, playerhand))
+            hitButton.config(width=50, height=5)
+            hitButton.pack(side="left", padx=5, pady=40, expand=True)
+
+            standButton = tk.Button(frame, text="Stand", command=stand)
+            standButton.config(width=50, height=5)
+            standButton.pack(side="right", padx=5, pady=40, expand=True)
+        
+        frame.pack(fill="both", expand=True)
+        globals.window.mainloop()
+
+        
+        
+
+
 
     def back():
         if not guest:
             userAccounts.save()
         loadGameMenu()
-
-    def playBlackJack(bet):
-        print("playing")
     
     globals.clearWindow()
 
@@ -412,9 +554,11 @@ def loadBlackJack():
     background_label = tk.Label(frame, image=image)
     background_label.place(x=0, y=0, relwidth=1, relheight=1)
 
-    backButton = tk.Button(frame, text="Back", command=back)
-    backButton.config(width=10, height=5)
-    backButton.pack(side="left", anchor="nw")
+    image2 = tk.PhotoImage(master=frame, file='images/back.png')
+    image2 = image2.subsample(7, 7)
+    backButton = tk.Button(frame, image=image2, command=back)
+    backButton.config(width=75, height=75)
+    backButton.pack(side="top", anchor="nw")
 
     wallet = ""
     guest = (globals.profile == "guest")
@@ -424,38 +568,38 @@ def loadBlackJack():
     else:
         wallet = globals.profile.wallet
 
-    walletLabel = tk.Label(frame, text=str(wallet) + " coins", image=image, compound=tk.CENTER, width=100, height=100)
-    walletLabel.config(font=("Areial bold", 15))
-    walletLabel.pack(side="right", anchor="ne")
-
     blackJackMenu = tk.Label(frame, text="Welcome to Black Jack!", image=image, compound=tk.CENTER, height=30, width=500)
     blackJackMenu.config(font=("Areial bold", 30))
-    blackJackMenu.pack(pady=(200,100))
+    blackJackMenu.pack(pady=(200,20))
+
+    walletLabel = tk.Label(frame, text=str(wallet) + " coins", image=image, compound=tk.CENTER, width=100, height=100)
+    walletLabel.config(font=("Areial bold", 20))
+    walletLabel.pack(pady=(20, 100))
 
     if wallet >= 5:
-        backButton = tk.Button(frame, text="Bet 5", command=partial(playBlackJack, 5))
-        backButton.config(width=10, height=5)
-        backButton.pack(side="left", padx=10, expand=True, anchor="e")
+        betFive = tk.Button(frame, text="Bet 5", command=partial(playBlackJack, 5, wallet))
+        betFive.config(width=10, height=5)
+        betFive.pack(side="left", padx=5, expand=True)
 
     if wallet >= 10:
-        backButton = tk.Button(frame, text="Bet 10", command=partial(playBlackJack, 10))
-        backButton.config(width=10, height=5)
-        backButton.pack(side="left", padx=10, expand=True, anchor="e")
+        betTen = tk.Button(frame, text="Bet 10", command=partial(playBlackJack, 10, wallet))
+        betTen.config(width=10, height=5)
+        betTen.pack(side="left", padx=5, expand=True)
 
     if wallet >= 25:
-        backButton = tk.Button(frame, text="Bet 25", command=partial(playBlackJack, 25))
-        backButton.config(width=10, height=5)
-        backButton.pack(side="left", padx=10, expand=True, anchor="e")
+        bet25 = tk.Button(frame, text="Bet 25", command=partial(playBlackJack, 25, wallet))
+        bet25.config(width=10, height=5)
+        bet25.pack(side="left", padx=5, expand=True)
 
     if wallet >= 50:
-        backButton = tk.Button(frame, text="Bet 50", command=partial(playBlackJack, 50))
-        backButton.config(width=10, height=5)
-        backButton.pack(side="right", padx=10, expand=True, anchor="e")
+        bet50 = tk.Button(frame, text="Bet 50", command=partial(playBlackJack, 50, wallet))
+        bet50.config(width=10, height=5)
+        bet50.pack(side="left", padx=5, expand=True)
     
     if wallet >= 100:
-        backButton = tk.Button(frame, text="Bet 100", command=partial(playBlackJack, 100))
-        backButton.config(width=10, height=5)
-        backButton.pack(side="right", padx=10, expand=True, anchor="e")
+        bet100 = tk.Button(frame, text="Bet 100", command=partial(playBlackJack, 100, wallet))
+        bet100.config(width=10, height=5)
+        bet100.pack(side="left", padx=5, expand=True)
 
     if not guest:
         walletButton = tk.Button(frame, text="Wallet", command=loadWallet)
