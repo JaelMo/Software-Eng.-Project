@@ -159,8 +159,8 @@ def highcard():
     lst1.sort()
     lst2.sort()
 
-    playerhigh = floor(lst1[1])
-    aihigh = floor(lst2[1])
+    playerhigh = floor(lst1[1]/4)
+    aihigh = floor(lst2[1]/4)
 
     if playerhigh > aihigh:
         print("PLAYER WINS BY HIGH CARD")
@@ -169,13 +169,6 @@ def highcard():
     else:
         print("Tie")
     
-
-    playercards = lst1[0]
-    aicards = lst2[0]
-
-    for n in range(len(playercards))
-        
-
 def points(hand,comCards):
     playable_cards = []
     for count in range(len(hand)):
