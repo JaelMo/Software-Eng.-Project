@@ -130,10 +130,7 @@ class Deck:
         return deck
     
     def drawCard(self):
-<<<<<<< Updated upstream
-=======
         #seed(datetime.now())
->>>>>>> Stashed changes
         card = self.deck[randint(0, len(self.deck)-1)]
         self.deck.remove(card)
         return card
