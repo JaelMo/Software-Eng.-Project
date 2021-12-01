@@ -1,13 +1,11 @@
 import os
-from random import randint, seed
-from random import random
-from datetime import datetime
+from random import randint
 import tkinter as tk
 
 global profile
 window = tk.Tk(className="Go For Broke!",)
 
-window.geometry("900x800")
+window.geometry("1100x800")
 
 def cls():
     os.system('cls' if os.name=='nt' else 'clear')
@@ -131,7 +129,6 @@ class Deck:
             , ("A Spades", tk.PhotoImage(file="images/ace_of_spades.png"))]
     
     def drawCard(self):
-        seed(datetime.now())
         card = self.deck[randint(0, len(self.deck)-1)]
         self.deck.remove(card)
         return card
