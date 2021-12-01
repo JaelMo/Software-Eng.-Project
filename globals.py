@@ -127,8 +127,13 @@ class Deck:
             , ("Q Spades", tk.PhotoImage(file="images/queen_of_spades2.png"))
             , ("K Spades", tk.PhotoImage(file="images/king_of_spades2.png"))
             , ("A Spades", tk.PhotoImage(file="images/ace_of_spades.png"))]
+        return deck
     
     def drawCard(self):
+<<<<<<< Updated upstream
+=======
+        #seed(datetime.now())
+>>>>>>> Stashed changes
         card = self.deck[randint(0, len(self.deck)-1)]
         self.deck.remove(card)
         return card
